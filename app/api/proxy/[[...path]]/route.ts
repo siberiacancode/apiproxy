@@ -13,60 +13,63 @@ const FORBIDDEN_HEADERS = new Set([
   "x-proxy-base",
 ]);
 
+type Params = { path?: string[] };
+
 export async function GET(
   request: NextRequest,
-  context: { params: Promise<{ path: string[] }> }
+  context: { params: Promise<Params> }
 ) {
   return proxy(request, context);
 }
 
 export async function POST(
   request: NextRequest,
-  context: { params: Promise<{ path: string[] }> }
+  context: { params: Promise<Params> }
 ) {
   return proxy(request, context);
 }
 
 export async function PUT(
   request: NextRequest,
-  context: { params: Promise<{ path: string[] }> }
+  context: { params: Promise<Params> }
 ) {
   return proxy(request, context);
 }
 
 export async function PATCH(
   request: NextRequest,
-  context: { params: Promise<{ path: string[] }> }
+  context: { params: Promise<Params> }
 ) {
   return proxy(request, context);
 }
 
 export async function DELETE(
   request: NextRequest,
-  context: { params: Promise<{ path: string[] }> }
+  context: { params: Promise<Params> }
 ) {
   return proxy(request, context);
 }
 
 export async function HEAD(
   request: NextRequest,
-  context: { params: Promise<{ path: string[] }> }
+  context: { params: Promise<Params> }
 ) {
   return proxy(request, context);
 }
 
 export async function OPTIONS(
   request: NextRequest,
-  context: { params: Promise<{ path: string[] }> }
+  context: { params: Promise<Params> }
 ) {
   return proxy(request, context);
 }
 
 async function proxy(
   request: NextRequest,
-  context: { params: Promise<{ path: string[] }> }
+  context: { params: Promise<Params> }
 ) {
-  const { path } = await context.params;
+  const { path: pathParam } = await context.params;
+  const path = pathParam ?? [];
   const searchParams = request.nextUrl.searchParams;
 
   const base =
@@ -96,7 +99,7 @@ async function proxy(
     }
   }
 
-  const pathname = path?.length ? `/${path.join("/")}` : "";
+  const pathname = path.length ? `/${path.join("/")}` : "";
   const forwardParams = new URLSearchParams(searchParams);
   forwardParams.delete("base");
   forwardParams.delete("target");
